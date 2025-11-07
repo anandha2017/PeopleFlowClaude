@@ -1,0 +1,185 @@
+// Prisma Schema for PeopleFlow MVP
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTICATION & USERS
+// ============================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String    // Hashed with bcrypt
+  name          String
+  role          UserRole  @default(EMPLOYEE)
+
+  // Link to Person record
+  personId      String?   @unique
+  person        Person?   @relation(fields: [personId], references: [id], onDelete: SetNull)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  HR_ADMIN
+  DEPT_HEAD
+  MANAGER
+  EMPLOYEE
+  RECRUITER
+}
+
+// ============================================
+// CORE ENTITIES
+// ============================================
+
+model Location {
+  id          String    @id @default(uuid())
+  name        String    // e.g., "London Office"
+  code        String    @unique // e.g., "LON"
+  city        String
+  country     String
+  timezone    String    @default("UTC")
+  active      Boolean   @default(true)
+
+  // Relations
+  people      Person[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("locations")
+}
+
+model Department {
+  id            String    @id @default(uuid())
+  name          String    // e.g., "Engineering"
+  code          String    @unique // e.g., "ENG"
+  description   String?
+
+  // Hierarchy (optional for MVP)
+  parentId      String?
+  parent        Department?  @relation("DepartmentHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children      Department[] @relation("DepartmentHierarchy")
+
+  // Department head
+  headId        String?
+  head          Person?   @relation("DepartmentHead", fields: [headId], references: [id], onDelete: SetNull)
+
+  // Relations
+  people        Person[]  @relation("DepartmentMembers")
+
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("departments")
+}
+
+model Person {
+  id                  String              @id @default(uuid())
+  employeeNumber      String?             @unique
+
+  // Personal Info
+  firstName           String
+  lastName            String
+  preferredName       String?
+  email               String              @unique
+  phone               String?
+
+  // Employment
+  jobTitle            String
+  employmentStatus    EmploymentStatus    @default(ACTIVE)
+  employmentType      EmploymentType      @default(FULL_TIME)
+  startDate           DateTime?
+  endDate             DateTime?
+  fullTimeEquivalent  Float               @default(1.0)
+
+  // Location & Department
+  locationId          String
+  location            Location            @relation(fields: [locationId], references: [id])
+  departmentId        String
+  department          Department          @relation("DepartmentMembers", fields: [departmentId], references: [id])
+
+  // Reporting (Hard Line)
+  managerId           String?
+  manager             Person?             @relation("ReportingLine", fields: [managerId], references: [id], onDelete: SetNull)
+  directReports       Person[]            @relation("ReportingLine")
+
+  // Department Head relationship
+  headOfDepartment    Department[]        @relation("DepartmentHead")
+
+  // Skills (simple string array for MVP)
+  skills              String[]
+
+  // Profile
+  profilePhotoUrl     String?
+  bio                 String?
+
+  // User account link
+  user                User?
+
+  // Soft Delete
+  deletedAt           DateTime?
+
+  // Audit
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  createdBy           String?
+  updatedBy           String?
+
+  @@map("people")
+  @@index([email])
+  @@index([employeeNumber])
+  @@index([managerId])
+  @@index([departmentId])
+  @@index([locationId])
+}
+
+enum EmploymentStatus {
+  CANDIDATE
+  OFFER
+  ONBOARDING
+  ACTIVE
+  LEAVE
+  OFFBOARDING
+  ALUMNI
+  ARCHIVED
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERN
+  CONSULTANT
+}
+
+// ============================================
+// AUDIT TRAIL (Simplified for MVP)
+// ============================================
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  entityType  String    // "Person", "Department", etc.
+  entityId    String
+  action      String    // "CREATE", "UPDATE", "DELETE"
+  changedBy   String?
+  changes     Json?     // Store before/after states
+  createdAt   DateTime  @default(now())
+
+  @@map("audit_logs")
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
