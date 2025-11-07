@@ -1,0 +1,137 @@
+{
+  "locations": [
+    {
+      "name": "London Office",
+      "code": "LON",
+      "country": "UK",
+      "timezone": "Europe/London"
+    },
+    {
+      "name": "Wolverhampton Office",
+      "code": "WOL",
+      "country": "UK",
+      "timezone": "Europe/London"
+    },
+    {
+      "name": "Bengaluru Office",
+      "code": "BLR",
+      "country": "India",
+      "timezone": "Asia/Kolkata"
+    }
+  ],
+  "departments": [
+    {
+      "name": "Engineering",
+      "code": "ENG"
+    },
+    {
+      "name": "Product",
+      "code": "PRD"
+    },
+    {
+      "name": "Marketing",
+      "code": "MKT"
+    },
+    {
+      "name": "Human Resources",
+      "code": "HR"
+    },
+    {
+      "name": "Finance",
+      "code": "FIN"
+    }
+  ],
+  "testPeople": [
+    {
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane.smith@company.com",
+      "jobTitle": "Engineering Manager",
+      "department": "Engineering",
+      "location": "London Office"
+    },
+    {
+      "firstName": "Emma",
+      "lastName": "Williams",
+      "email": "emma.williams@company.com",
+      "jobTitle": "Product Director",
+      "department": "Product",
+      "location": "London Office"
+    },
+    {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@company.com",
+      "jobTitle": "Senior Software Engineer",
+      "department": "Engineering",
+      "location": "London Office",
+      "manager": "jane.smith@company.com"
+    }
+  ],
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Node.js",
+    "Python",
+    "Java",
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "PostgreSQL",
+    "Product Management",
+    "Agile",
+    "Leadership",
+    "Data Science",
+    "Machine Learning"
+  ],
+  "hiringNeeds": [
+    {
+      "title": "Senior Full Stack Engineer",
+      "department": "Engineering",
+      "location": "London Office",
+      "priority": "High",
+      "justification": "We need a senior engineer to lead the development of our new customer portal. This is a critical Q1 initiative with revenue impact of £2M+. Without this hire, we risk missing our Q1 launch deadline."
+    },
+    {
+      "title": "Product Manager",
+      "department": "Product",
+      "location": "Remote",
+      "priority": "Medium",
+      "justification": "Expanding product team to handle growing portfolio. This PM will own the analytics and reporting product line, which currently lacks dedicated ownership."
+    },
+    {
+      "title": "Data Scientist",
+      "department": "Engineering",
+      "location": "Bengaluru Office",
+      "priority": "High",
+      "justification": "Building ML capabilities for recommendation engine. Critical for personalization features launching in Q2 2026. Competitive advantage at stake."
+    }
+  ],
+  "squads": [
+    {
+      "name": "Customer Portal Squad",
+      "code": "CUST-PRT",
+      "description": "Rebuilding customer self-service portal",
+      "objective": "Launch new portal by Q1 2026 with 50% reduction in support tickets",
+      "squadType": "Project",
+      "owner": "jane.smith@company.com"
+    },
+    {
+      "name": "Platform Engineering Guild",
+      "code": "PLAT-ENG",
+      "description": "Maintaining and improving core platform infrastructure",
+      "objective": "Achieve 99.9% uptime and reduce deployment time by 50%",
+      "squadType": "Guild",
+      "owner": "john.doe@company.com"
+    },
+    {
+      "name": "AI/ML Initiative",
+      "code": "AI-ML",
+      "description": "Building machine learning capabilities",
+      "objective": "Deliver production-ready ML platform by Q2 2026",
+      "squadType": "Initiative",
+      "owner": "emma.williams@company.com"
+    }
+  ]
+}
